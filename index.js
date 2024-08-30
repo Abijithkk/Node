@@ -1,31 +1,21 @@
-// load.env file
-require('dotenv').config()
-// import express
-const express=require('express')
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const routes = require('./Routes/routes');
+require('./db/connection');
 
-const cors=require('cors')
+const projectServer = express();
+projectServer.use(cors());
+projectServer.use(express.json());
+projectServer.use(routes);
 
-const routes=require('./Routes/routes')
-require('./db/connection')
+const PORT = process.env.PORT || 4000;
+const HOST = '0.0.0.0'; // This will bind to all available network interfaces
 
+projectServer.listen(PORT, HOST, () => {
+    console.log(`______Project Server Started At http://${HOST}:${PORT}______`);
+});
 
-// create server using express
-const projectServer=express()
-projectServer.use(cors())
-// convert all incoming json data to js data
-projectServer.use(express.json())
-
-projectServer.use(routes)
-
-
-
-const PORT=4000  || process.env.PORT
-projectServer.listen(PORT,()=>{
-    console.log(`______Project Server Started At Port Number ${PORT}______`);
-})
-
-// resolve api requests
-projectServer.get('/',(req,res)=>{
-    res.send(`<h1>Project started ...</h1>`)
-})
-
+projectServer.get('/', (req, res) => {
+    res.send(`<h1>Project started ...</h1>`);
+});
